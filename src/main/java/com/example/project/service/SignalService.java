@@ -1,46 +1,35 @@
 package com.example.project.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.example.project.component.Algo;
+import com.example.project.component.SignalDefault;
 
 @Service
-public class SignalService implements SignalHandler{
+public class SignalService implements SignalHandler {
+	private final Map<Integer, SignalType> strategies;
+
+	public String result;
+
+	private final SignalType signalDefault;
+
+	public SignalService(List<SignalType> strategiesList, SignalDefault defaultSignal) {
+		strategies = strategiesList.stream().collect(Collectors.toMap(SignalType::getSignal, Function.identity()));
+		signalDefault = defaultSignal;
+	}
 
 	@Override
 	public void handleSignal(int signal) {
 		Algo algo = new Algo();
+		SignalType strategy = strategies.getOrDefault(signal, signalDefault);
+		strategy.execute(algo);
+		algo.doAlgo();
 
-        switch (signal) {
-            case 1:
-                algo.setUp();
-                algo.setAlgoParam(1,60);
-                algo.performCalc();
-                algo.submitToMarket();
-                break;
-
-            case 2:
-                algo.reverse();
-                algo.setAlgoParam(1,80);
-                algo.submitToMarket();
-                break;
-
-            case 3:
-                algo.setAlgoParam(1,90);
-                algo.setAlgoParam(2,15);
-                algo.performCalc();
-                algo.submitToMarket();
-                break;
-
-            default:
-                algo.cancelTrades();
-                break;
-        }
-
-        algo.doAlgo();
-		
 	}
-	
-
 
 }
