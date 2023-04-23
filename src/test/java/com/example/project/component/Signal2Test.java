@@ -17,7 +17,7 @@ public class Signal2Test {
 	private Algo algo;
 	
 	@InjectMocks
-	private Signal1 signal2;
+	private Signal2 signal2;
 	
 	@Test
 	public void testExecutre() {
@@ -25,7 +25,7 @@ public class Signal2Test {
 		// Act
 		signal2.execute(algo);
 		 //Assert
-		 verify(algo, times(1)).reverse();
+		 verify(algo).reverse();
 		 verify(algo).submitToMarket();
 		 verify(algo).setAlgoParam(1, 80);
 		 
